@@ -4,6 +4,12 @@ This repo is optimized for learning kubernetes with an end goal of understanding
 
 ## Cluster Architecture
 
+5 VMs:
+
+* 2 Master 
+* 2 Worker
+* 1 Loadbalancer
+
 
 ## Labs
 
@@ -58,3 +64,6 @@ This does the below:
 - Runs the below command on all nodes to allow for network forwarding in IP Tables.
   This is required for kubernetes networking to function correctly.
     > sysctl net.bridge.bridge-nf-call-iptables=1
+
+
+![Alt text](docs\images\provisioned compute instances.png?raw=true "Provisioned Instances")
