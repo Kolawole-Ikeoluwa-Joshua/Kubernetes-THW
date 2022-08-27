@@ -65,4 +65,4 @@ This does the below:
   This is required for kubernetes networking to function correctly.
     > sysctl net.bridge.bridge-nf-call-iptables=1
 
-![ProvisionedInstances](docs/images/provisioned compute instances.png)
+![ProvisionedInstances](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/ff5bf11e8fbf303b2f2f74f99de56bb03c715324/docs/images/provisioned%20compute%20instances.png)
