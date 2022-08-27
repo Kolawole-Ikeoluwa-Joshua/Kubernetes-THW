@@ -2,6 +2,7 @@
 This repo is optimized for learning kubernetes with an end goal of understanding each task required to bootstrap a Kubernetes cluster.
 
 
+
 ## Cluster Architecture
 
 5 VMs:
@@ -9,6 +10,7 @@ This repo is optimized for learning kubernetes with an end goal of understanding
 * 2 Master 
 * 2 Worker
 * 1 Loadbalancer
+
 
 
 ## Labs
@@ -24,6 +26,8 @@ Download and Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads) on 
 ### Vagrant
 Vagrant provides an easier way to deploy multiple virtual machines on VirtualBox more consistenlty.
 Download and Install [Vagrant](https://www.vagrantup.com/) on windows host
+
+
 
 ## Labs 2:
 ### Provision Compute Instances
@@ -67,6 +71,8 @@ This does the below:
 
 ![ProvisionedInstances](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/ff5bf11e8fbf303b2f2f74f99de56bb03c715324/docs/images/provisioned%20compute%20instances.png)
 
+
+
 ### SSH to the nodes
 
 ### 1. SSH using Vagrant
@@ -107,3 +113,69 @@ Vagrant generates a private key for each of these VMs. It is placed under the .v
 - Ensure the worker nodes have Docker installed on them. Version: 20.10.17
   > command `sudo docker version`
 ![dockerconfirmation](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/worker%202%20docker%20confirmation.png)
+
+
+
+### Troubleshooting Tips
+
+1. If any of the VMs failed to provision, or is not configured correct, delete the vm using the command:
+
+`vagrant destroy <vm>`
+
+Then reprovision. Only the missing VMs will be re-provisioned
+
+`vagrant up`
+
+
+Sometimes the delete does not delete the folder created for the vm and throws the below error.
+
+VirtualBox error:
+
+    VBoxManage.exe: error: Could not rename the directory 'D:\VirtualBox VMs\ubuntu-bionic-18.04-cloudimg-20190122_1552891552601_76806' to 'D:\VirtualBox VMs\kubernetes-ha-worker-2' to save the settings file (VERR_ALREADY_EXISTS)
+    VBoxManage.exe: error: Details: code E_FAIL (0x80004005), component SessionMachine, interface IMachine, callee IUnknown
+    VBoxManage.exe: error: Context: "SaveSettings()" at line 3105 of file VBoxManageModifyVM.cpp
+
+In such cases delete the VM, then delete the VM folder and then re-provision
+
+`vagrant destroy <vm>`
+
+`rmdir "<path-to-vm-folder>\kubernetes-ha-worker-2"`
+
+`vagrant up`
+
+
+
+## Labs 3:
+
+### Installing the Client Tools
+master-1 node will perform administrative tasks, such as creating certificates, kubeconfig files and distributing them to the different VMs.
+
+Note: make sure that system is able to access all the provisioned VMs through SSH to copy files over.
+
+## Access all VMs
+
+Generate Key Pair on master-1 node
+`$ssh-keygen`
+
+Leave all settings to default.
+
+View the generated public key ID at:
+
+```
+$cat .ssh/id_rsa.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD......8+08b vagrant@master-1
+```
+
+Move public key of master to all other VMs
+
+```
+$cat >> ~/.ssh/authorized_keys <<EOF
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD......8+08b vagrant@master-1
+EOF
+```
+try to SSH into all nodes from master-1 node
+
+![Adminsetup](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/setting%20up%20master-1%20for%20admin%20purpose.png)
+
+
+
