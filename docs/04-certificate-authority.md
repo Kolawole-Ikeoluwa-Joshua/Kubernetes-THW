@@ -123,10 +123,6 @@ kube-scheduler.crt
 
 ![schedulerclientcert](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/scheduler%20cert.png)
 
-#### The Kubelet Client Certificates
-
-We are going to skip certificate configuration for Worker Nodes for now. We will deal with them when we configure the workers.
-For now let's just focus on the control plane components.
 
 #### The Kubernetes API Server Certificate
 
@@ -244,6 +240,12 @@ for instance in master-1 master-2; do
 done
 ```
 ![distributecerts](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/distribute%20certificates.png)
+
+
+#### The Kubelet Client Certificates
+
+We are going to skip certificate configuration for Worker Nodes for now. We will deal with them when we configure the workers.
+For now let's just focus on the control plane components.
 
 
 > The `kube-proxy`, `kube-controller-manager`, `kube-scheduler`, and `kubelet` client certificates will be used to generate client authentication configuration files in the next lab. These certificates will be embedded into the client authentication configuration files. We will then copy those configuration files to the other master nodes.
