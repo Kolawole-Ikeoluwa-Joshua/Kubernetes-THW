@@ -120,6 +120,7 @@ Results:
 kube-scheduler.key
 kube-scheduler.crt
 ```
+
 ![schedulerclientcert](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/scheduler%20client%20certificate.png)
 
 #### The Kubelet Client Certificates
