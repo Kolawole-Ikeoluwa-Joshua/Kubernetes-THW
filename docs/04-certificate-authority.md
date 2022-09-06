@@ -37,4 +37,33 @@ You will use the ca.crt file in many places, so it will be copied to many places
 The ca.key is used by the CA for signing certificates. And it should be securely stored. In this case our master node(s) is our CA server as well, so we will store it on master node(s). There is not need to copy this file to elsewhere.
 
 
+### Client and Server Certificates
 
+In this section you will generate client and server certificates for each Kubernetes component and a client certificate for the Kubernetes `admin` user.
+
+#### The Admin Client Certificate
+
+Generate the `admin` client certificate and private key:
+
+```
+# Generate private key for admin user
+openssl genrsa -out admin.key 2048
+
+# Generate CSR for admin user. Note the OU.
+openssl req -new -key admin.key -subj "/CN=admin/O=system:masters" -out admin.csr
+
+# Sign certificate for admin user using CA servers private key
+openssl x509 -req -in admin.csr -CA ca.crt -CAkey ca.key -CAcreateserial  -out admin.crt -days 1000
+```
+
+Note that the admin user is part of the **system:masters** group. This is how we are able to perform any administrative operations on Kubernetes cluster using kubectl utility.
+
+Results:
+
+```
+admin.key
+admin.crt
+```
+![adminclientcert](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/admin%20client%20certificate.png)
+
+The admin.crt and admin.key file gives you administrative access. We will configure these to be used with the kubectl tool to perform administrative functions on kubernetes.
