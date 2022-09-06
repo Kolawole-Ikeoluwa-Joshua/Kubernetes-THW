@@ -243,4 +243,6 @@ Results:
 ca.crt
 ca.key
 ```
-[CA](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/create%20CA,%20CSR,%20private%20key.png)
+![CA](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/create%20CA,%20CSR,%20private%20key.png)
+
+
