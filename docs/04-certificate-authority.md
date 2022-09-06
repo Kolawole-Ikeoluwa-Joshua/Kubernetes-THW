@@ -127,3 +127,85 @@ kube-scheduler.crt
 
 We are going to skip certificate configuration for Worker Nodes for now. We will deal with them when we configure the workers.
 For now let's just focus on the control plane components.
+
+### The Kubernetes API Server Certificate
+
+The kube-apiserver certificate requires all names that various components may reach it to be part of the alternate names. These include the different DNS names, and IP addresses such as the master servers IP address, the load balancers IP address, the kube-api service IP address etc.
+
+The `openssl` command cannot take alternate names as command line parameter. So we must create a `conf` file for it:
+
+```
+cat > openssl.cnf <<EOF
+[req]
+req_extensions = v3_req
+distinguished_name = req_distinguished_name
+[req_distinguished_name]
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = kubernetes
+DNS.2 = kubernetes.default
+DNS.3 = kubernetes.default.svc
+DNS.4 = kubernetes.default.svc.cluster.local
+IP.1 = 10.96.0.1
+IP.2 = 192.168.5.11
+IP.3 = 192.168.5.12
+IP.4 = 192.168.5.30
+IP.5 = 127.0.0.1
+EOF
+```
+
+Generates certs for kube-apiserver
+
+```
+openssl genrsa -out kube-apiserver.key 2048
+openssl req -new -key kube-apiserver.key -subj "/CN=kube-apiserver" -out kube-apiserver.csr -config openssl.cnf
+openssl x509 -req -in kube-apiserver.csr -CA ca.crt -CAkey ca.key -CAcreateserial  -out kube-apiserver.crt -extensions v3_req -extfile openssl.cnf -days 1000
+```
+
+Results:
+
+```
+kube-apiserver.crt
+kube-apiserver.key
+```
+
+### The ETCD Server Certificate
+
+Similarly ETCD server certificate must have addresses of all the servers part of the ETCD cluster
+
+The `openssl` command cannot take alternate names as command line parameter. So we must create a `conf` file for it:
+
+```
+cat > openssl-etcd.cnf <<EOF
+[req]
+req_extensions = v3_req
+distinguished_name = req_distinguished_name
+[req_distinguished_name]
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = @alt_names
+[alt_names]
+IP.1 = 192.168.5.11
+IP.2 = 192.168.5.12
+IP.3 = 127.0.0.1
+EOF
+```
+
+Generates certs for ETCD
+
+```
+openssl genrsa -out etcd-server.key 2048
+openssl req -new -key etcd-server.key -subj "/CN=etcd-server" -out etcd-server.csr -config openssl-etcd.cnf
+openssl x509 -req -in etcd-server.csr -CA ca.crt -CAkey ca.key -CAcreateserial  -out etcd-server.crt -extensions v3_req -extfile openssl-etcd.cnf -days 1000
+```
+
+Results:
+
+```
+etcd-server.key
+etcd-server.crt
+```
