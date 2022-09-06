@@ -229,3 +229,21 @@ service-account.crt
 ```
 
 ![serviceacctcert](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/service%20account%20certificate.png)
+
+
+### Distribute the Certificates to control planes
+
+Copy the appropriate certificates and private keys to each controller instance:
+
+```
+for instance in master-1 master-2; do
+  scp ca.crt ca.key kube-apiserver.key kube-apiserver.crt \
+    service-account.key service-account.crt \
+    etcd-server.key etcd-server.crt \
+    ${instance}:~/
+done
+```
+![distributecerts](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/distribute%20certificates.png)
+
+
+> The `kube-proxy`, `kube-controller-manager`, `kube-scheduler`, and `kubelet` client certificates will be used to generate client authentication configuration files in the next lab. These certificates will be embedded into the client authentication configuration files. We will then copy those configuration files to the other master nodes.
