@@ -212,3 +212,35 @@ kubectl version --client
 ```
 Client Version: version.Info{Major:"1", Minor:"13", GitVersion:"v1.13.0", GitCommit:"ddf47ac13c1a9483ea035a79cd7c10005ff21a6d", GitTreeState:"clean", BuildDate:"2018-12-03T21:04:45Z", GoVersion:"go1.11.2", Compiler:"gc", Platform:"linux/amd64"}
 ```
+
+
+## Labs 4:
+
+### Provisioning a CA and Generating TLS Certificates
+
+In this lab you will provision a PKI Infrastructure using the popular openssl tool, then use it to bootstrap a Certificate Authority, and generate TLS certificates for the following components: etcd, kube-apiserver, kube-controller-manager, kube-scheduler, kubelet, and kube-proxy.
+
+Log into master node-1, then provision a Certificate Authority that can be used to generate additional TLS certificates.
+
+Create a CA certificate, then generate a Certificate Signing Request and use it to create a private key:
+
+```
+# Create private key for CA
+openssl genrsa -out ca.key 2048
+
+# Comment line starting with RANDFILE in /etc/ssl/openssl.cnf definition to avoid permission issues
+sudo sed -i '0,/RANDFILE/{s/RANDFILE/\#&/}' /etc/ssl/openssl.cnf
+
+# Create CSR using the private key
+openssl req -new -key ca.key -subj "/CN=KUBERNETES-CA" -out ca.csr
+
+# Self sign the csr using its own private key
+openssl x509 -req -in ca.csr -signkey ca.key -CAcreateserial  -out ca.crt -days 1000
+```
+Results:
+
+```
+ca.crt
+ca.key
+```
+[CA](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/create%20CA,%20CSR,%20private%20key.png)
