@@ -10,7 +10,7 @@ In this section you will generate kubeconfig files for the `controller manager`,
 
 Note: Each kubeconfig requires a Kubernetes API Server to connect to. 
 
-To support high availability the IP address assigned to the load balancer `192.168.5.30`, will be used for client components (`kube-proxy` & `admin` user) that live outside the master node as the kube-api server.  
+To support high availability the IP address assigned to the load balancer `192.168.5.30`, will be used for client components (`kube-proxy`) that live outside the master node as the kube-api server.  
 
 First set load balancer address:
 
@@ -122,3 +122,38 @@ kube-scheduler.kubeconfig
 ```
 
 Reference docs for kube-scheduler [here](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-scheduler/)
+
+### The admin Kubernetes Configuration File
+
+Generate a kubeconfig file for the `admin` user:
+
+```
+{
+  kubectl config set-cluster kubernetes-the-hard-way \
+    --certificate-authority=ca.crt \
+    --embed-certs=true \
+    --server=https://127.0.0.1:6443 \
+    --kubeconfig=admin.kubeconfig
+
+  kubectl config set-credentials admin \
+    --client-certificate=admin.crt \
+    --client-key=admin.key \
+    --embed-certs=true \
+    --kubeconfig=admin.kubeconfig
+
+  kubectl config set-context default \
+    --cluster=kubernetes-the-hard-way \
+    --user=admin \
+    --kubeconfig=admin.kubeconfig
+
+  kubectl config use-context default --kubeconfig=admin.kubeconfig
+}
+```
+
+Results:
+
+```
+admin.kubeconfig
+```
+
+Reference docs for kubeconfig [here](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
