@@ -128,7 +128,7 @@ kube-scheduler.crt
 We are going to skip certificate configuration for Worker Nodes for now. We will deal with them when we configure the workers.
 For now let's just focus on the control plane components.
 
-### The Kubernetes API Server Certificate
+#### The Kubernetes API Server Certificate
 
 The kube-apiserver certificate requires all names that various components may reach it to be part of the alternate names. These include the different DNS names, and IP addresses such as the master servers IP address, the load balancers IP address, the kube-api service IP address etc.
 
@@ -172,7 +172,7 @@ kube-apiserver.crt
 kube-apiserver.key
 ```
 
-### The ETCD Server Certificate
+#### The ETCD Server Certificate
 
 Similarly ETCD server certificate must have addresses of all the servers part of the ETCD cluster
 
@@ -209,3 +209,23 @@ Results:
 etcd-server.key
 etcd-server.crt
 ```
+#### The Service Account Key Pair
+
+The Kubernetes Controller Manager leverages a key pair to generate and sign service account tokens as describe in the [managing service accounts](https://kubernetes.io/docs/admin/service-accounts-admin/) documentation.
+
+Generate the `service-account` certificate and private key:
+
+```
+openssl genrsa -out service-account.key 2048
+openssl req -new -key service-account.key -subj "/CN=service-accounts" -out service-account.csr
+openssl x509 -req -in service-account.csr -CA ca.crt -CAkey ca.key -CAcreateserial  -out service-account.crt -days 1000
+```
+
+Results:
+
+```
+service-account.key
+service-account.crt
+```
+
+![serviceacctcert](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/service%20account%20certificate.png)
