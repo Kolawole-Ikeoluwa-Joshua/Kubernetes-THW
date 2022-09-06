@@ -157,3 +157,24 @@ admin.kubeconfig
 ```
 
 Reference docs for kubeconfig [here](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
+
+### Distribute the Kubernetes Configuration Files
+
+Copy the appropriate `kube-proxy` kubeconfig files to each worker instance:
+
+```
+for instance in worker-1 worker-2; do
+  scp kube-proxy.kubeconfig ${instance}:~/
+done
+```
+![distkubeproxy](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/distribute%20kube-proxy%20config.png)
+
+
+Copy the appropriate `admin.kubeconfig`, `kube-controller-manager` and `kube-scheduler` kubeconfig files to each controller instance:
+
+```
+for instance in master-1 master-2; do
+  scp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig ${instance}:~/
+done
+```
+![distkube-configs](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/dist%20other%20configs%20to%20master%20nodes.png)

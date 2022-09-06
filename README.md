@@ -19,3 +19,4 @@ This repo is optimized for learning kubernetes with an end goal of understanding
 * [Provisioning Compute Resources](docs/02-compute-resources.md)
 * [Installing the Client Tools](docs/03-client-tools.md)
 * [Provisioning the CA and Generating TLS Certificates](docs/04-certificate-authority.md)
+* [Generating Kubernetes Configuration Files for Authentication](docs/05-kubernetes-configuration-files.md)
