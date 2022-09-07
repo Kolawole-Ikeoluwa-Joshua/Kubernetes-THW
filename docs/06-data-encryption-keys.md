@@ -44,10 +44,19 @@ done
 
 Move `encryption-config.yaml` encryption config file to appropriate directory.
 
+Note: make sure the /var/lib/kubernetes/ directories are present on master-1, master-2 nodes.
+
+on master-1 run the commands:
 ```
-for instance in master-1 master-2; do
+sudo mv encryption-config.yaml /var/lib/kubernetes/
+```
+
+```
+for instance in master-2; do
   ssh ${instance} sudo mv encryption-config.yaml /var/lib/kubernetes/
 done
 ```
+
+![moveencryptionconfigs](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/move%20encryption%20config%20files.png)
 
 Reference: https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#encrypting-your-data
