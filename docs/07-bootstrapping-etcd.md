@@ -118,3 +118,15 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 ```
+
+#### Start the etcd Server
+
+```
+{
+  sudo systemctl daemon-reload
+  sudo systemctl enable etcd
+  sudo systemctl start etcd
+}
+```
+
+> Remember to run the above commands on each controller node: `master-1`, and `master-2`.
