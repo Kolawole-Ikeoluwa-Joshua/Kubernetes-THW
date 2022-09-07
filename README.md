@@ -21,3 +21,4 @@ This repo is optimized for learning kubernetes with an end goal of understanding
 * [Provisioning the CA and Generating TLS Certificates](docs/04-certificate-authority.md)
 * [Generating Kubernetes Configuration Files for Authentication](docs/05-kubernetes-configuration-files.md)
 * [Generating the Data Encryption Config and Key](docs/06-data-encryption-keys.md)
+* [Bootstrapping the etcd Cluster](docs/07-bootstrapping-etcd.md)
