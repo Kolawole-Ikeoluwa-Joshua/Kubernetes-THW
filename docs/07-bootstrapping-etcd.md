@@ -40,7 +40,26 @@ enter the command [setw synchronize-panes] again to deactivate sync
 
 ![syncedtmux](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/sync%20tmux%20panes.png)
 
-* To exit tmux session run the command in any pane:
+* To exit tmux session after Bootstrapping the etcd Cluster run the command in any pane:
 ```
 tmux kill-session
+```
+### Bootstrapping an etcd Cluster Member
+
+#### Download and Install the etcd Binaries
+
+Download the official etcd release binaries from the [coreos/etcd](https://github.com/coreos/etcd) GitHub project:
+
+```
+wget -q --show-progress --https-only --timestamping \
+  "https://github.com/coreos/etcd/releases/download/v3.3.9/etcd-v3.3.9-linux-amd64.tar.gz"
+```
+
+Extract and install the `etcd` server and the `etcdctl` command line utility:
+
+```
+{
+  tar -xvf etcd-v3.3.9-linux-amd64.tar.gz
+  sudo mv etcd-v3.3.9-linux-amd64/etcd* /usr/local/bin/
+}
 ```
