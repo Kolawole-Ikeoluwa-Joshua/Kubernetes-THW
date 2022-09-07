@@ -4,7 +4,7 @@ Kubernetes stores a variety of data including cluster state, application configu
 
 In this lab you will generate an encryption key and an [encryption config](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#understanding-the-encryption-at-rest-configuration) suitable for encrypting Kubernetes Secrets.
 
-## The Encryption Key
+### The Encryption Key
 
 Generate an encryption key:
 
