@@ -130,3 +130,25 @@ EOF
 ```
 
 > Remember to run the above commands on each controller node: `master-1`, and `master-2`.
+
+![verifyservice](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/verify%20etcd%20service%20is%20running.png)
+
+
+List the etcd cluster members:
+
+```
+sudo ETCDCTL_API=3 etcdctl member list \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/etcd/ca.crt \
+  --cert=/etc/etcd/etcd-server.crt \
+  --key=/etc/etcd/etcd-server.key
+```
+
+> output
+
+```
+45bf9ccad8d8900a, started, master-2, https://192.168.5.12:2380, https://192.168.5.12:2379
+54a5796a6803f252, started, master-1, https://192.168.5.11:2380, https://192.168.5.11:2379
+```
+
+Reference: https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#starting-etcd-clusters
