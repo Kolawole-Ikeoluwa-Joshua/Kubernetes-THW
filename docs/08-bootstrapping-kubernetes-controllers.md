@@ -201,3 +201,46 @@ kubectl get componentstatuses --kubeconfig admin.kubeconfig
 ![verifycontrolplane](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/verify%20control%20plane%20components.png)
 
 > Remember to run the above commands on each controller node: `master-1`, and `master-2`.
+
+### The Kubernetes Frontend Load Balancer
+
+In this section you will provision an external load balancer to front the Kubernetes API Servers.
+
+#### Provision a Network Load Balancer
+
+Login to `loadbalancer` instance using SSH Terminal.
+
+```
+sudo apt-get update && sudo apt-get install -y haproxy
+```
+
+```
+cat <<EOF | sudo tee /etc/haproxy/haproxy.cfg 
+frontend kubernetes
+    bind 192.168.5.30:6443
+    option tcplog
+    mode tcp
+    default_backend kubernetes-master-nodes
+
+backend kubernetes-master-nodes
+    mode tcp
+    balance roundrobin
+    option tcp-check
+    server master-1 192.168.5.11:6443 check fall 3 rise 2
+    server master-2 192.168.5.12:6443 check fall 3 rise 2
+EOF
+```
+
+```
+sudo service haproxy restart
+```
+
+#### Verification
+
+Make a HTTP request for the Kubernetes version info:
+
+```
+curl  https://192.168.5.30:6443/version -k
+```
+
+![HAProxyNLB](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/Set%20up%20HA%20proxy%20network%20loadbalancer.png)
