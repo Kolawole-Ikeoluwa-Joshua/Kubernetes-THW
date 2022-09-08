@@ -149,3 +149,33 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 ```
+
+#### Configure the Kubernetes Scheduler
+
+Copy the `kube-scheduler` kubeconfig into place:
+
+```
+sudo cp kube-scheduler.kubeconfig /var/lib/kubernetes/
+```
+
+Create the `kube-scheduler.service` systemd unit file:
+
+```
+cat <<EOF | sudo tee /etc/systemd/system/kube-scheduler.service
+[Unit]
+Description=Kubernetes Scheduler
+Documentation=https://github.com/kubernetes/kubernetes
+
+[Service]
+ExecStart=/usr/local/bin/kube-scheduler \\
+  --kubeconfig=/var/lib/kubernetes/kube-scheduler.kubeconfig \\
+  --address=127.0.0.1 \\
+  --leader-elect=true \\
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+```
