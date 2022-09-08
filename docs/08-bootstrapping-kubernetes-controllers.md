@@ -190,3 +190,14 @@ EOF
 ```
 
 > Allow up to 10 seconds for the Kubernetes API Server to fully initialize.
+
+
+### Verification components through Kubernetes API server
+
+```
+kubectl get componentstatuses --kubeconfig admin.kubeconfig
+```
+
+![verifycontrolplane](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/verify%20control%20plane%20components.png)
+
+> Remember to run the above commands on each controller node: `master-1`, and `master-2`.
