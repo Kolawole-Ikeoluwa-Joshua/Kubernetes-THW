@@ -223,3 +223,14 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 ```
+### Start the Worker Services
+On worker-1:
+```
+{
+  sudo systemctl daemon-reload
+  sudo systemctl enable kubelet kube-proxy
+  sudo systemctl start kubelet kube-proxy
+}
+```
+
+> Remember to run the above commands on worker node: `worker-1`
