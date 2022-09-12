@@ -82,3 +82,8 @@ Results:
 ```
 worker-1.kubeconfig
 ```
+### Copy certificates, private keys and kubeconfig files to the worker node:
+On master-1:
+```
+scp ca.crt worker-1.crt worker-1.key worker-1.kubeconfig worker-1:~/
+```
