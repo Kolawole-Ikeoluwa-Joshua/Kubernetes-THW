@@ -13,9 +13,10 @@ bash cert_verify.sh
 ```
 
 Note: If you get the following errors after running `bash cert_verify.sh`:
-
-cert_verify.sh: line 94: syntax error near unexpected token `$'\r'' 
-'ert_verify.sh: line 94: `check_cert_ca()
+{
+    cert_verify.sh: line 94: syntax error near unexpected token `$'\r'' 
+    'ert_verify.sh: line 94: `check_cert_ca()`
+}
 
 
 It is a symptom of line-ending mismatch in `cert_verify.sh` script, run the command below to fix line-ending error and run verification script.
