@@ -169,3 +169,31 @@ master-1$ kubectl create -f csrs-for-bootstrapping.yaml
 
 ```
 Reference: https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet-tls-bootstrapping/#authorize-kubelet-to-create-csr
+
+## Authorize workers(kubelets) to approve CSR
+```
+master-1$ kubectl create clusterrolebinding auto-approve-csrs-for-group --clusterrole=system:certificates.k8s.io:certificatesigningrequests:nodeclient --group=system:bootstrappers
+
+ --------------- OR ---------------
+
+master-1$ cat > auto-approve-csrs-for-group.yaml <<EOF
+# Approve all CSRs for the group "system:bootstrappers"
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: auto-approve-csrs-for-group
+subjects:
+- kind: Group
+  name: system:bootstrappers
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: system:certificates.k8s.io:certificatesigningrequests:nodeclient
+  apiGroup: rbac.authorization.k8s.io
+EOF
+
+
+master-1$ kubectl create -f auto-approve-csrs-for-group.yaml
+```
+
+Reference: https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet-tls-bootstrapping/#approval
