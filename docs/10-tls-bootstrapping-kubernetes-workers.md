@@ -198,7 +198,7 @@ master-1$ kubectl create -f auto-approve-csrs-for-group.yaml
 
 Reference: https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet-tls-bootstrapping/#approval
 
-## Step 3 Authorize workers(kubelets) to Auto Renew Certificates on expiration
+## Authorize workers(kubelets) to Auto Renew Certificates on expiration
 
 We now create the Cluster Role Binding required for the nodes to automatically renew the certificates on expiry. Note that we are NOT using the **system:bootstrappers** group here any more. Since by the renewal period, we believe the node would be bootstrapped and part of the cluster already. All nodes are part of the **system:nodes** group.
 
