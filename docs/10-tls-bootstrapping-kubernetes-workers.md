@@ -138,3 +138,34 @@ Things to note:
 Once this is created the token to be used for authentication is `07401b.f395accd246ae52d`
 
 Reference: https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/#bootstrap-token-secret-format
+
+## Authorize workers(kubelets) to create CSR
+
+Next we associate the group we created before to the system:node-bootstrapper ClusterRole. This ClusterRole gives the group enough permissions to bootstrap the kubelet
+
+```
+master-1$ kubectl create clusterrolebinding create-csrs-for-bootstrapping --clusterrole=system:node-bootstrapper --group=system:bootstrappers
+
+--------------- OR ---------------
+
+master-1$ cat > csrs-for-bootstrapping.yaml <<EOF
+# enable bootstrapping nodes to create CSR
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: create-csrs-for-bootstrapping
+subjects:
+- kind: Group
+  name: system:bootstrappers
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: system:node-bootstrapper
+  apiGroup: rbac.authorization.k8s.io
+EOF
+
+
+master-1$ kubectl create -f csrs-for-bootstrapping.yaml
+
+```
+Reference: https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet-tls-bootstrapping/#authorize-kubelet-to-create-csr
