@@ -228,3 +228,110 @@ master-1$ kubectl create -f auto-approve-renewals-for-nodes.yaml
 ```
 
 Reference: https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet-tls-bootstrapping/#approval
+
+## Configure Kubelet to TLS Bootstrap
+
+It is now time to configure the second worker to TLS bootstrap using the token we generated
+
+For worker-1 we started by creating a kubeconfig file with the TLS certificates that we manually generated.
+Here, we don't have the certificates yet. So we cannot create a kubeconfig file. Instead we create a bootstrap-kubeconfig file with information about the token we created.
+
+This is to be done on the `worker-2` node.
+
+```
+worker-2$ sudo kubectl config --kubeconfig=/var/lib/kubelet/bootstrap-kubeconfig set-cluster bootstrap --server='https://192.168.5.30:6443' --certificate-authority=/var/lib/kubernetes/ca.crt
+sudo kubectl config --kubeconfig=/var/lib/kubelet/bootstrap-kubeconfig set-credentials kubelet-bootstrap --token=07401b.f395accd246ae52d
+sudo kubectl config --kubeconfig=/var/lib/kubelet/bootstrap-kubeconfig set-context bootstrap --user=kubelet-bootstrap --cluster=bootstrap
+sudo kubectl config --kubeconfig=/var/lib/kubelet/bootstrap-kubeconfig use-context bootstrap
+```
+
+Or
+
+```
+worker-2$ cat <<EOF | sudo tee /var/lib/kubelet/bootstrap-kubeconfig
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority: /var/lib/kubernetes/ca.crt
+    server: https://192.168.5.30:6443
+  name: bootstrap
+contexts:
+- context:
+    cluster: bootstrap
+    user: kubelet-bootstrap
+  name: bootstrap
+current-context: bootstrap
+kind: Config
+preferences: {}
+users:
+- name: kubelet-bootstrap
+  user:
+    token: 07401b.f395accd246ae52d
+EOF
+```
+
+Reference: https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet-tls-bootstrapping/#kubelet-configuration
+
+## Create Kubelet Config File
+
+Create the `kubelet-config.yaml` configuration file:
+
+```
+worker-2$ cat <<EOF | sudo tee /var/lib/kubelet/kubelet-config.yaml
+kind: KubeletConfiguration
+apiVersion: kubelet.config.k8s.io/v1beta1
+authentication:
+  anonymous:
+    enabled: false
+  webhook:
+    enabled: true
+  x509:
+    clientCAFile: "/var/lib/kubernetes/ca.crt"
+authorization:
+  mode: Webhook
+clusterDomain: "cluster.local"
+clusterDNS:
+  - "10.96.0.10"
+resolvConf: "/run/systemd/resolve/resolv.conf"
+runtimeRequestTimeout: "15m"
+EOF
+```
+
+> Note: We are not specifying the certificate details - tlsCertFile and tlsPrivateKeyFile - in this file
+
+## Configure Kubelet Service
+
+Create the `kubelet.service` systemd unit file:
+
+```
+worker-2$ cat <<EOF | sudo tee /etc/systemd/system/kubelet.service
+[Unit]
+Description=Kubernetes Kubelet
+Documentation=https://github.com/kubernetes/kubernetes
+After=docker.service
+Requires=docker.service
+
+[Service]
+ExecStart=/usr/local/bin/kubelet \\
+  --bootstrap-kubeconfig="/var/lib/kubelet/bootstrap-kubeconfig" \\
+  --config=/var/lib/kubelet/kubelet-config.yaml \\
+  --image-pull-progress-deadline=2m \\
+  --kubeconfig=/var/lib/kubelet/kubeconfig \\
+  --cert-dir=/var/lib/kubelet/pki/ \\
+  --rotate-certificates=true \\
+  --network-plugin=cni \\
+  --register-node=true \\
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+```
+
+Things to note here:
+- **bootstrap-kubeconfig**: Location of the bootstrap-kubeconfig file.
+- **cert-dir**: The directory where the generated certificates are stored.
+- **rotate-certificates**: Rotates client certificates when they expire.
+
