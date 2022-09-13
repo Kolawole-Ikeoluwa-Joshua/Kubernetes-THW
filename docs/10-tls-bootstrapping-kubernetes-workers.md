@@ -50,3 +50,40 @@ Copy the ca certificate to the worker-2 node:
 ```
 scp ca.crt worker-2:~/
 ```
+
+### Configure the Binaries on the Worker node
+
+### Download and Install Worker Binaries
+
+```
+worker-2$ wget -q --show-progress --https-only --timestamping \
+  https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl \
+  https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kube-proxy \
+  https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubelet
+```
+
+Reference: https://kubernetes.io/docs/setup/release/#node-binaries
+
+Create the installation directories:
+
+```
+worker-2$ sudo mkdir -p \
+  /etc/cni/net.d \
+  /opt/cni/bin \
+  /var/lib/kubelet \
+  /var/lib/kube-proxy \
+  /var/lib/kubernetes \
+  /var/run/kubernetes
+```
+
+Install the worker binaries:
+
+```
+{
+  chmod +x kubectl kube-proxy kubelet
+  sudo mv kubectl kube-proxy kubelet /usr/local/bin/
+}
+```
+### Move the ca certificate
+
+`worker-2$ sudo mv ca.crt /var/lib/kubernetes/
