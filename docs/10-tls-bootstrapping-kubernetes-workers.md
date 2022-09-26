@@ -55,8 +55,10 @@ scp ca.crt worker-2:~/
 
 ### Download and Install Worker Binaries
 
+on worker-2:
+
 ```
-worker-2$ wget -q --show-progress --https-only --timestamping \
+$ wget -q --show-progress --https-only --timestamping \
   https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl \
   https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kube-proxy \
   https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubelet
@@ -86,7 +88,7 @@ Install the worker binaries:
 ```
 ### Move the ca certificate
 
-`worker-2$ sudo mv ca.crt /var/lib/kubernetes/
+`worker-2$ sudo mv ca.crt /var/lib/kubernetes/`
 
 ## Create the Boostrap Token to be used by Nodes(Kubelets) to invoke Certificate API
 
@@ -386,3 +388,37 @@ On worker-2:
 }
 ```
 > Remember to run the above commands on worker node: `worker-2`
+
+## Approve Server CSR
+The csrapproving controller that ships as part of kube-controller-manager and is enabled by default. The controller uses the SubjectAccessReview API to determine if a given user is authorized to request a CSR, then approves based on the authorization outcome. To prevent conflicts with other approvers, the builtin approver doesn't explicitly deny CSRs. It only ignores unauthorized requests. The controller also prunes expired certificates as part of garbage collection.
+
+CSRs can be approved outside of the approval flows builtin to the controller manager.
+
+To Approve CSR:
+
+`master-1$ kubectl get csr`
+
+
+`master-1$ kubectl certificate approve <csr_name>`
+
+
+![approve-csr](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/approve%20csr.png)
+
+Note: In the event your cluster persists for longer than 365 days, you will need to manually approve the replacement CSR.
+
+Reference: https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet-tls-bootstrapping/#kubectl-approval
+
+## Verification
+
+List the registered Kubernetes nodes from the master node:
+
+```
+master-1$ kubectl get nodes --kubeconfig admin.kubeconfig
+```
+
+> output
+
+![worker-nodes](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/verifying%20worker%20nodes%20setup.png)
+
+Note: It is OK for the worker node to be in a NotReady state. That is because we haven't configured Networking yet.
+
