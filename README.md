@@ -26,3 +26,4 @@ This repo is optimized for learning kubernetes with an end goal of understanding
 * [Bootstrapping the Kubernetes Worker Nodes](docs/09-bootstrapping-kubernetes-workers.md)
 * [TLS Bootstrapping the Kubernetes Worker Nodes](docs/10-tls-bootstrapping-kubernetes-workers.md)
 * [Configuring kubectl for Remote Access](docs/11-configuring-kubectl.md)
+* [Deploy Weave - Pod Networking Solution](docs/12-configure-pod-networking.md)
