@@ -321,6 +321,7 @@ ExecStart=/usr/local/bin/kubelet \\
   --kubeconfig=/var/lib/kubelet/kubeconfig \\
   --cert-dir=/var/lib/kubelet/pki/ \\
   --rotate-certificates=true \\
+  --rotate-server-certificates=true \\
   --network-plugin=cni \\
   --register-node=true \\
   --v=2
@@ -336,6 +337,7 @@ Things to note here:
 - **bootstrap-kubeconfig**: Location of the bootstrap-kubeconfig file.
 - **cert-dir**: The directory where the generated certificates are stored.
 - **rotate-certificates**: Rotates client certificates when they expire.
+- **rotate-server-certificates**: Requests for server certificates on bootstrap and rotates them when they expire.
 
 ## Configure the Kubernetes Proxy
 
