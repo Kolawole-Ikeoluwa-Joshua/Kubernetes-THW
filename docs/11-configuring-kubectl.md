@@ -32,3 +32,28 @@ Generate a kubeconfig file suitable for authenticating as the `admin` user:
 ```
 
 Reference doc for kubectl config [here](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
+
+### Verification
+
+Check the health of the remote Kubernetes cluster:
+
+```
+kubectl get componentstatuses
+```
+
+> output
+
+![cluster-components](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/check%20cluster%20components%20with%20kubectl.png)
+
+
+List the nodes in the remote Kubernetes cluster:
+
+```
+kubectl get nodes
+```
+
+> output
+
+![cluster-nodes](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/get%20nodes%20with%20kubectl.png)
+
+Note: It is OK for the worker node to be in a `NotReady` state. Worker nodes will come into `Ready` state once networking is configured.
