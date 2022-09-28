@@ -85,3 +85,27 @@ curl http://worker-2:$PORT_NUMBER
  # Output Truncated for brevity
 <body>
 ```
+
+### Logs
+
+In this section you will verify the ability to [retrieve container logs](https://kubernetes.io/docs/concepts/cluster-administration/logging/).
+
+Retrieve the full name of the `nginx` pod:
+
+```
+POD_NAME=$(kubectl get pods -l app=nginx -o jsonpath="{.items[0].metadata.name}")
+```
+
+Print the `nginx` pod logs:
+
+```
+kubectl logs $POD_NAME
+```
+
+> output
+
+```
+10.44.0.0 - - [28/Sep/2022:17:14:32 +0000] "GET /favicon.ico HTTP/1.1" 404 555 ...
+10.32.0.1 - - [28/Sep/2022:17:16:52 +0000] "GET / HTTP/1.1" 200 615 "-" "curl/7.58.0" "-"
+``
+
