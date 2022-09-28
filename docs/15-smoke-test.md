@@ -26,3 +26,29 @@ sudo ETCDCTL_API=3 etcdctl get \
 
 > output
 
+![data-smoke-test](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/data%20encryption%20smoke%20test.png)
+
+The etcd key should be prefixed with `k8s:enc:aescbc:v1:key1`, which indicates the `aescbc` provider was used to encrypt the data with the `key1` encryption key.
+
+Cleanup:
+`kubectl delete secret kubernetes-the-hard-way`
+
+### Deployments
+
+In this section you will verify the ability to create and manage [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/).
+
+Create a deployment for the [nginx](https://nginx.org/en/) web server:
+
+```
+kubectl create deployment nginx --image=nginx
+```
+
+List the pod created by the `nginx` deployment:
+
+```
+kubectl get pods -l app=nginx
+```
+
+> output
+
+![nginx](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/nginx%20deployment.png)
