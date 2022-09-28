@@ -29,3 +29,4 @@ This repo is optimized for learning kubernetes with an end goal of understanding
 * [Deploy Weave - Pod Networking Solution](docs/12-configure-pod-networking.md)
 * [Kube API Server to Kubelet Configuration](docs/13-kube-apiserver-to-kubelet.md)
 * [Deploying the DNS Cluster Add-on](docs/14-dns-addon.md)
+* [Smoke Test](docs/15-smoke-test.md)
