@@ -52,3 +52,36 @@ kubectl get pods -l app=nginx
 > output
 
 ![nginx](https://github.com/Kolawole-Ikeoluwa-Joshua/Kubernetes-THW/blob/main/docs/images/nginx%20deployment.png)
+
+### Services
+
+In this section you will verify the ability to access applications remotely using [port forwarding](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/).
+
+Create a service to expose deployment nginx on node ports.
+
+```
+kubectl expose deploy nginx --type=NodePort --port 80
+```
+
+
+```
+PORT_NUMBER=$(kubectl get svc -l app=nginx -o jsonpath="{.items[0].spec.ports[0].nodePort}")
+```
+
+Test to view NGINX page
+
+```
+curl http://worker-1:$PORT_NUMBER
+curl http://worker-2:$PORT_NUMBER
+```
+
+> output
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+ # Output Truncated for brevity
+<body>
+```
