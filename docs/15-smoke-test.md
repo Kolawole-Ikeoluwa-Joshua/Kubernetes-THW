@@ -107,5 +107,20 @@ kubectl logs $POD_NAME
 ```
 10.44.0.0 - - [28/Sep/2022:17:14:32 +0000] "GET /favicon.ico HTTP/1.1" 404 555 ...
 10.32.0.1 - - [28/Sep/2022:17:16:52 +0000] "GET / HTTP/1.1" 200 615 "-" "curl/7.58.0" "-"
-``
+```
 
+### Exec
+
+In this section you will verify the ability to [execute commands in a container](https://kubernetes.io/docs/tasks/debug-application-cluster/get-shell-running-container/#running-individual-commands-in-a-container).
+
+Print the nginx version by executing the `nginx -v` command in the `nginx` container:
+
+```
+kubectl exec -ti $POD_NAME -- nginx -v
+```
+
+> output
+
+```
+nginx version: nginx/1.23.1
+```
